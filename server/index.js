@@ -11,4 +11,8 @@ app.listen(port, () => {
   console.log(`app listening on http://localhost:${port}`)
 });
 
+app.get('/test', (req, res) => {
+  res.send('GT4')
+})
+
 module.exports = app
