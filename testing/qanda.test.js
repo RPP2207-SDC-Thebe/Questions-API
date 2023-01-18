@@ -2,11 +2,19 @@
 const request = require('supertest');
 const server = require('../server/index.js')
 
-describe("Jest default test", () => {
-  test('check if server.js responds', async () => {
-    const response = await request(server).get('/test')
+afterAll(async () => {
+  console.log("... Test Ended");
+  // server.close()
+});
+
+
+describe("Test route", () => {
+  test('Test route should respond with the expected value', async () => {
+    const app = await request(server).get('/test')
     // console.log(response.res.text)
     const expected = 'GT4'
-    expect(response.res.text).toEqual(expected)
+    expect(app.res.text).toEqual(expected)
   });
+
 })
+
