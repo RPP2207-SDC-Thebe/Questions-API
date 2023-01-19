@@ -1,3 +1,6 @@
+-- read this sql file
+-- \i ./database/postgre_schema.sql;
+
 DROP DATABASE IF EXISTS qanda;
 CREATE DATABASE qanda;
 -- connect DB
@@ -44,4 +47,7 @@ CREATE TABLE photos(
 COPY photos (PHOTO_ID, ANSWER_ID, PIC_URL)
 FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers_photos.csv' DELIMITER ',' CSV HEADER;
 
---Test querying data
+-- set sequence
+SELECT setval('questions_question_id_seq', COALESCE((SELECT MAX(question_id)+1 FROM questions), 1), false);
+SELECT setval('answers_answer_id_seq', COALESCE((SELECT MAX(answer_id)+1 FROM answers), 1), false);
+SELECT setval('photos_photo_id_seq', COALESCE((SELECT MAX(photo_id)+1 FROM photos), 1), false);
