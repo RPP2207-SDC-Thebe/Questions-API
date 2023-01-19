@@ -3,19 +3,19 @@ const router = require("express").Router();
 const controllers = require('./controllers')
 
 // get questions and answers
-router.get('', controllers.getQuestions)
-router.get('', controllers.getAnswers)
+router.get('/getQuestions', controllers.getQuestions)
+router.get('/getAnswers', controllers.getAnswers)
 
 // post questios and answers
-router.post('', controllers.postQuestion)
-router.post('', controllers.postAnswer)
+router.post('/postQuestion', controllers.postQuestion)
+router.post('/postAnswer', controllers.postAnswer)
 
 // put questions and answers report and helpfulness
-router.put('', controllers.updateQuestionReport)
-router.post('', controllers.updateQuestionHelpfulness)
+router.put('/updateQuestionReport', controllers.updateQuestionReport)
+router.post('/updateQuestionHelpfulness', controllers.updateQuestionHelpfulness)
 
-router.put('', controllers.updateAnswerReport)
-router.post('', controllers.updateAnswerHelpfulness)
+router.put('/updateAnswerReport', controllers.updateAnswerReport)
+router.post('/updateAnswerHelpfulness', controllers.updateAnswerHelpfulness)
 
 
 module.exports = router;
