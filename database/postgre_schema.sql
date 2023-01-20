@@ -51,3 +51,20 @@ FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers_photos.csv'
 SELECT setval('questions_question_id_seq', COALESCE((SELECT MAX(question_id)+1 FROM questions), 1), false);
 SELECT setval('answers_answer_id_seq', COALESCE((SELECT MAX(answer_id)+1 FROM answers), 1), false);
 SELECT setval('photos_photo_id_seq', COALESCE((SELECT MAX(photo_id)+1 FROM photos), 1), false);
+
+-- Create index for lookup values
+-- Questions table
+CREATE INDEX idx_product_id ON questions(product_id);
+CREATE INDEX idx_question_id ON questions(question_id);
+CREATE INDEX idx_question_submitted_date  ON questions(submitted_date);
+CREATE INDEX idx_question_helpfulness ON questions (question_helpfulness);
+
+-- Answers table
+CREATE INDEX idx_answer_id ON answers(answer_id);
+CREATE INDEX idx_question_fk ON answers (question_id);
+CREATE INDEX idx_answer_submitted_date ON answers(submitted_date);
+CREATE INDEX idx_answers_helpfulness ON answers (answer_helpfulness);
+
+--Photos table
+CREATE INDEX idx_photo_id ON photos(photo_id);
+CREATE INDEX idx_answers_fk ON photos (answer_id);

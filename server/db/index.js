@@ -1,4 +1,9 @@
-// pooling
+/*
+Pool vs Client
+Use a pool if expecting multiple concurrent requests.
+That is literally what it is there for:
+to provide a pool of re-usable open client instances
+ */
 const { Pool } = require('pg')
 require('dotenv').config()
 
