@@ -8,7 +8,7 @@ const routes = require('./routes');
 
 app.use(express.json());
 // routes
-app.use(routes);
+app.use('/qa', routes);
 
 app.listen(port, () => {
   console.log(`app listening on http://localhost:${port}`)
