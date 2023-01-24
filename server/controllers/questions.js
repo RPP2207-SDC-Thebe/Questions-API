@@ -11,7 +11,7 @@ module.exports = {
     // console.log(queryString)
     pool.query(queryString)
       .then((data) => {
-        console.log(data.rows)
+        //console.log(data.rows)
         res.status(200).send(data.rows);
       })
       .catch((err) => {

@@ -1,9 +1,24 @@
-var db = require('../db')
+var pool = require('../db')
+const queries = require('../db/queries.js')
 
 module.exports = {
 
   getAnswers: (req, res) => {
-    console.log('getAnswers: ', req.params.product_id)
+    console.log('getAnswers for question_id: ', req.params.question_id)
+    let question_id = req.params.question_id;
+    let count = req.query.count || 5;
+    let page = req.query.page || 1;
+    let queryString = queries.getAnswer(question_id, count, page)
+
+    pool.query(queryString)
+      .then((data) => {
+        console.log(data.rows)
+        res.status(200).send(data.rows);
+      })
+      .catch((err) => {
+        console.log('getAnswers: ', err)
+        res.status(500).send(err)
+      })
   },
   postAnswer: (req, res) => {
     console.log('postAnswer: ', req)

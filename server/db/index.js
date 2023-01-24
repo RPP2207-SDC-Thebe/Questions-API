@@ -19,11 +19,6 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000
 })
 
-// pool.connect()
-//   .then(() => console.log(`connected to DB ${process.env.DB_NAME} as ${process.env.DB_USERNAME} via ${process.env.DB_HOST}:${process.env.PG_PORT}.`))
-//   // .then(() => pool.qeury(`SELECT pid FROM pg_stat_activity where usename = "${process.env.DB_USERNAME}"`))
-//   // .then((result) => console.log(result.rows))
-//   .catch((err) => { console.log('error connecting DB: ', err) })
 
 pool.connect((err, client, release) => {
   if (err) {
