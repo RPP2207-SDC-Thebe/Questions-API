@@ -1,4 +1,4 @@
-const db = require('../db')
+const pool = require('../db/index.js')
 const queries = require('../db/queries.js')
 
 module.exports = {
@@ -8,6 +8,16 @@ module.exports = {
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = queries.getQuestion(product_id, count, page)
+    // console.log(queryString)
+    pool.query(queryString)
+      .then((data) => {
+        console.log(data.rows)
+        res.status(200).send(data.rows);
+      })
+      .catch((err) => {
+        console.log('getQuestions: ', err)
+        res.status(500).send(err)
+      })
 
 
   },

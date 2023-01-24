@@ -1,7 +1,7 @@
 const queries = {
   getQuestion: (product_id, count, page) => {
     var queryString =
-      `SELECT json_build_object(
+      `SELECT json_build_object (
       'product_id', ${product_id},
       'results',(
         SELECT json_agg(
@@ -30,7 +30,7 @@ const queries = {
             )
           ) FROM QUESTIONS where product_id = ${product_id} limit ${count}
         )
-      );`
+      ) as questions;`
     return queryString
   }
 }
