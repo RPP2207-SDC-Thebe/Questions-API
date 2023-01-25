@@ -1,10 +1,11 @@
 const pool = require('../db/index.js')
 const getQueries = require('../db/getQueries.js')
 const postQueries = require('../db/postQueries.js')
+const putQueries = require('../db/putQueries.js')
 
 module.exports = {
   getQuestions: (req, res) => {
-    console.log('getQuestions for product_id: ', req.params.product_id)
+    //console.log('getQuestions for product_id: ', req.params.product_id)
     let product_id = req.params.product_id;
     let count = req.query.count || 5;
     let page = req.query.page || 1;
@@ -23,7 +24,7 @@ module.exports = {
 
   },
   postQuestion: (req, res) => {
-    console.log('postQuestion: ', req.body)
+    //console.log('postQuestion: ', req.body)
     let queryString = postQueries.postQuestion(req.body)
     //console.log(queryString)
     pool.query(queryString)
@@ -39,10 +40,37 @@ module.exports = {
       })
   },
   updateQuestionReport: (req, res) => {
-    console.log('updateQuestionReport: ', req)
+    //console.log('updateQuestionReport: ', req.params.question_id)
+    let queryString = putQueries.updateReported(req.params.question_id, 'question_id', 'QUESTIONS')
+    //console.log(queryString)
+    pool.query(queryString)
+      .then((result) => {
+        //console.log(result)
+        if (result.command === 'UPDATE' && result.rowCount === 1) {
+          res.status(200).send(`${req.params.question_id} updated`)
+        }
+      })
+      .catch((err) => {
+        console.log('updateQuestionReport err: ', err)
+        res.status(500).send(err)
+      })
   },
   updateQuestionHelpfulness: (req, res) => {
-    console.log('updateQuestionHelpfulness: ', req)
-  }
 
+    //console.log('updateQuestionHelpfulness: ', req.params.question_id)
+    let queryString = putQueries.updateHelpfulness(req.params.question_id, 'question_id', 'question_helpfulness', 'QUESTIONS')
+    //console.log(queryString)
+    pool.query(queryString)
+      .then((result) => {
+        console.log(result)
+        if (result.command === 'UPDATE' && result.rowCount === 1) {
+          res.status(200).send(`${req.params.question_id} updated`)
+        }
+      })
+      .catch((err) => {
+        console.log('updateQuestionHelpfulness err: ', err)
+        res.status(500).send(err)
+      })
+  }
 }
+
