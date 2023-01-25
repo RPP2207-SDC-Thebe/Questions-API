@@ -1,7 +1,7 @@
-const queries = {
+const getQueries = {
   getQuestion: (product_id, count, page) => {
     var queryString =
-      `SELECT json_build_object(
+      `SELECT json_build_object (
       'product_id', ${product_id},
       'results',(
         SELECT json_agg(
@@ -30,13 +30,65 @@ const queries = {
             )
           ) FROM QUESTIONS where product_id = ${product_id} limit ${count}
         )
-      );`
+      ) as questions;`
     return queryString
+  },
+  getAnswer: (question_id, count, page) => {
+    var queryString =
+      `SELECT json_build_object(
+        'question', ${question_id},
+        'count',${count},
+        'page', ${page},
+        'results',(
+          SELECT json_agg(
+            json_build_object(
+              'answer_id', answer_id,
+              'body', answer_body,
+              'date', submitted_date,
+              'answerer_name', username,
+              'reported', reported,
+              'helpful', answer_helpfulness,
+              'photos',(
+                SELECT json_agg(photos) FROM	(
+                  SELECT photo_id, pic_url FROM PHOTOS where photos.answer_id = answers.answer_id
+                ) photos
+              )
+            )
+          ) FROM ANSWERS WHERE answers.question_id = ${question_id} AND reported = false limit ${count}
+        )
+      ) as answers;`
+
+    return queryString
+
   }
+
 }
 
-module.exports = queries;
+module.exports = getQueries;
 
+
+// SELECT json_build_object(
+//   'question', 271356,
+//   'count',5,
+//   'page', 1,
+//   'results',(
+//     SELECT json_agg(
+//       json_build_object(
+//         'answer_id', answer_id,
+//         'body', answer_body,
+//         'date', submitted_date,
+//         'answerer_name', username,
+//         'reported', reported,
+//         'helpful', answer_helpfulness,
+//         'photos',(
+//           SELECT json_agg(photos) FROM	(
+//             SELECT photo_id, pic_url FROM PHOTOS where photos.answer_id = answers.answer_id
+//           ) photos
+//         )
+//       )
+//     ) FROM ANSWERS WHERE answers.question_id = 271356 AND reported = false limit 5
+//   )
+// ) as answers;
 
 
 // `SELECT json_build_object(
