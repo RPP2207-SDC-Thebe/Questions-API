@@ -1,4 +1,4 @@
-const queries = {
+const getQueries = {
   getQuestion: (product_id, count, page) => {
     var queryString =
       `SELECT json_build_object (
@@ -61,9 +61,10 @@ const queries = {
     return queryString
 
   }
+
 }
 
-module.exports = queries;
+module.exports = getQueries;
 
 
 // SELECT json_build_object(

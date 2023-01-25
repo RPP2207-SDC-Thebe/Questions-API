@@ -1,5 +1,6 @@
 const pool = require('../db/index.js')
-const queries = require('../db/queries.js')
+const getQueries = require('../db/getQueries.js')
+const postQueries = require('../db/postQueries.js')
 
 module.exports = {
   getQuestions: (req, res) => {
@@ -7,7 +8,7 @@ module.exports = {
     let product_id = req.params.product_id;
     let count = req.query.count || 5;
     let page = req.query.page || 1;
-    let queryString = queries.getQuestion(product_id, count, page)
+    let queryString = getQueries.getQuestion(product_id, count, page)
     // console.log(queryString)
     pool.query(queryString)
       .then((data) => {
@@ -22,7 +23,20 @@ module.exports = {
 
   },
   postQuestion: (req, res) => {
-    console.log('postQuestion: ', req)
+    console.log('postQuestion: ', req.body)
+    let queryString = postQueries.postQuestion(req.body)
+    //console.log(queryString)
+    pool.query(queryString)
+      .then((result) => {
+        //console.log(result)
+        if (result.command === 'INSERT' && result.rowCount === 1) {
+          res.status(201).send('Question posted.')
+        }
+      })
+      .catch((err) => {
+        console.log('postQuestion err: ', err)
+        res.status(500).send(err)
+      })
   },
   updateQuestionReport: (req, res) => {
     console.log('updateQuestionReport: ', req)

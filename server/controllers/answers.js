@@ -1,5 +1,5 @@
 var pool = require('../db')
-const queries = require('../db/queries.js')
+const getQueries = require('../db/getQueries.js')
 
 module.exports = {
 
@@ -8,7 +8,7 @@ module.exports = {
     let question_id = req.params.question_id;
     let count = req.query.count || 5;
     let page = req.query.page || 1;
-    let queryString = queries.getAnswer(question_id, count, page)
+    let queryString = getQueries.getAnswer(question_id, count, page)
 
     pool.query(queryString)
       .then((data) => {
