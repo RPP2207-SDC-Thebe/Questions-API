@@ -20,12 +20,34 @@ const postQueries = {
       );`
     return queryString
   },
-  postAnswer: () => {
-    // var queryString =
-    //   `INSERT INTO`
-
+  postAnswer: (question_id, reqData) => {
+    let body = reqData.body
+    let submitted_date = new Date().getTime()
+    let username = reqData.name
+    let email = reqData.email
+    var queryString =
+      `INSERT INTO answers (question_id,
+        answer_body,
+        submitted_date,
+        username,
+        email) VALUES(
+          ${question_id},
+          '${body}',
+          '${submitted_date}',
+          '${username}',
+          '${email}'
+        ) RETURNING answer_id;`
     return queryString
 
+  },
+  postPhoto: (answer_id, pic_url) => {
+    var queryString =
+      `INSERT INTO photos (answer_id,
+        pic_url) VALUES(
+          ${answer_id},
+          '${pic_url}'
+        );`
+    return queryString
   }
 
 }
