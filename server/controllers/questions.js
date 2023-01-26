@@ -5,8 +5,11 @@ const putQueries = require('../db/putQueries.js')
 
 module.exports = {
   getQuestions: (req, res) => {
-    //console.log('getQuestions for product_id: ', req.params.product_id)
-    let product_id = req.params.product_id;
+    // if use the path format on Learn -> req.params.product_id;
+    // if use THE path format in FEC -> req.query.product_id;
+    console.log('getQuestions for product_id: ', req.query.product_id)
+
+    let product_id = req.query.product_id;
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getQuestion(product_id, count, page)
