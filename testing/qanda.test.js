@@ -1,11 +1,8 @@
-
 const request = require('supertest');
-const server = require('../server/index.js')
-
-afterAll(async () => {
-  console.log("... Test Ended");
-  // server.close()
-});
+const Client = require('pg').Client;
+const server = require('../server/app.js');
+const Pool = require('pg').Pool;
+require('dotenv').config()
 
 
 describe("Test route", () => {
@@ -15,6 +12,7 @@ describe("Test route", () => {
     const expected = 'GT4'
     expect(app.res.text).toEqual(expected)
   });
-
 })
+
+
 

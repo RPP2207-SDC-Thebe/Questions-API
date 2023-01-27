@@ -11,7 +11,6 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.PG_PORT,
   database: process.env.DB_NAME,
-  // user: 'saikitJK'
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   max: 40,
