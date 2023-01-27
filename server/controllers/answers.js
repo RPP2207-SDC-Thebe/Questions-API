@@ -6,8 +6,12 @@ const putQueries = require('../db/putQueries.js')
 module.exports = {
 
   getAnswers: (req, res) => {
-    console.log('getAnswers for question_id: ', req.params.question_id)
+    //console.log('getAnswers for question_id: ', req.params.question_id)
     let question_id = req.params.question_id;
+    if (!product_id) {
+      res.status(400)
+      return
+    }
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getAnswer(question_id, count, page)
@@ -25,9 +29,13 @@ module.exports = {
   postAnswer: (req, res) => {
     //console.log('postAnswer: ', req.params.question_id, req.body)
     let queryString = postQueries.postAnswer(req.params.question_id, req.body)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
-        console.log('returned answer_id is: ', result.rows[0].answer_id)
+        //console.log('returned answer_id is: ', result.rows[0].answer_id)
         if (req.body.photos.length === 0 && result.command === 'INSERT' && result.rowCount === 1) {
           res.status(201).send('Answer posted.')
         } else {
@@ -61,6 +69,10 @@ module.exports = {
     //console.log('updateAnswerReport: ', req.params.answer_id)
     let queryString = putQueries.updateReported(req.params.answer_id, 'answer_id', 'ANSWERS')
     //console.log(queryString)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
         console.log(result)
@@ -75,9 +87,13 @@ module.exports = {
 
   },
   updateAnswerHelpfulness: (req, res) => {
-    console.log('updateAnswerHelpfulness: ', req.params.answer_id)
+    //console.log('updateAnswerHelpfulness: ', req.params.answer_id)
     let queryString = putQueries.updateHelpfulness(req.params.answer_id, 'answer_id', 'answer_helpfulness', 'ANSWERS')
     // console.log(queryString)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
         console.log(result)

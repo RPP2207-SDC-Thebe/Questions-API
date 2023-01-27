@@ -19,11 +19,11 @@ const pool = new Pool({
 })
 
 
-pool.connect((err, client, release) => {
+pool.connect(async (err, client, release) => {
   if (err) {
     return console.error('Error acquiring client', err.stack)
   }
-  client.query(`SELECT pid FROM pg_stat_activity where usename = '${process.env.DB_USERNAME}'`, (err, result) => {
+  await client.query(`SELECT pid FROM pg_stat_activity where usename = '${process.env.DB_USERNAME}'`, (err, result) => {
     release()
     if (err) {
       return console.error('Error executing query', err.stack)

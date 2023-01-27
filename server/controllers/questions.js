@@ -7,9 +7,13 @@ module.exports = {
   getQuestions: (req, res) => {
     // if use the path format on Learn -> req.params.product_id;
     // if use THE path format in FEC -> req.query.product_id;
-    console.log('getQuestions for product_id: ', req.query.product_id)
+    //console.log('getQuestions for product_id: ', req.query.product_id)
 
     let product_id = req.query.product_id;
+    if (!product_id) {
+      res.status(400).send('product_id is undefined')
+      return
+    }
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getQuestion(product_id, count, page)
@@ -30,6 +34,10 @@ module.exports = {
     //console.log('postQuestion: ', req.body)
     let queryString = postQueries.postQuestion(req.body)
     //console.log(queryString)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
         //console.log(result)
@@ -46,6 +54,10 @@ module.exports = {
     //console.log('updateQuestionReport: ', req.params.question_id)
     let queryString = putQueries.updateReported(req.params.question_id, 'question_id', 'QUESTIONS')
     //console.log(queryString)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
         //console.log(result)
@@ -63,6 +75,10 @@ module.exports = {
     //console.log('updateQuestionHelpfulness: ', req.params.question_id)
     let queryString = putQueries.updateHelpfulness(req.params.question_id, 'question_id', 'question_helpfulness', 'QUESTIONS')
     //console.log(queryString)
+    if (queryString === null) {
+      res.status(400)
+      return
+    }
     pool.query(queryString)
       .then((result) => {
         console.log(result)

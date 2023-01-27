@@ -11,7 +11,7 @@ app.use(express.json());
 app.use('/qa', routes);
 
 app.get('/test', (req, res) => {
-  res.send('GT4')
+  res.send('OK')
 })
 
 module.exports = app
