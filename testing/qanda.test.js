@@ -15,7 +15,7 @@ describe("Express Server", () => {
     expect(app.res.statusCode).toBe(200)
   });
 })
-describe("Sad path: End points", () => {
+describe("Sad path on End Points, CREATE, READ, UPDATE operations", () => {
   describe("GET", () => {
     test('Get questions should return 400 if product_id is not provided', async () => {
       const app = await request(server).get(`/qa/questions?`)
@@ -144,7 +144,7 @@ describe("Sad path: End points", () => {
   })
 })
 
-describe("Happy path: End points", () => {
+describe("Happy path on End Points, CREATE, READ, UPDATE operations", () => {
   describe("GET", () => {
     test('Get questions should return statuscode 200, json content type and result from DB if get operation is succeeded.', async () => {
       const app = await request(server).get(`/qa/questions`).query({ product_id: 77177 })
