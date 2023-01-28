@@ -17,7 +17,7 @@ module.exports = {
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getQuestion(product_id, count, page)
-    console.log(queryString)
+    //console.log(queryString)
     pool.query(queryString)
       .then((data) => {
         //console.log(data.rows)
@@ -31,7 +31,7 @@ module.exports = {
 
   },
   postQuestion: async (req, res) => {
-    //console.log('postQuestion: ', req.body)
+    console.log('postQuestion: ', req.body)
     if (Object.keys(req.body).length === 0) {
       res.status(400).send('missing req.body')
       return
@@ -51,7 +51,7 @@ module.exports = {
       })
   },
   updateQuestionReport: (req, res) => {
-    console.log('updateQuestionReport: ', req.params.question_id)
+    //console.log('updateQuestionReport: ', req.params.question_id)
     if (!req.params.question_id || req.params.question_id === ':question_id') {
       res.status(400).send()
       return
@@ -83,7 +83,7 @@ module.exports = {
 
     pool.query(queryString)
       .then((result) => {
-        console.log(result)
+        //console.log(result)
         if (result.command === 'UPDATE' && result.rowCount === 1) {
           res.status(200).send(`${req.params.question_id} updated`)
         }

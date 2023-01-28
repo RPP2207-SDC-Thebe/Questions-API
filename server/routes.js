@@ -3,7 +3,7 @@ const router = require("express").Router();
 const controllers = require('./controllers')
 
 // get questions and answers
-router.get('/questions?', controllers.questions.getQuestions)
+router.get('/questions', controllers.questions.getQuestions)
 router.get('/questions/:question_id/answers', controllers.answers.getAnswers)
 
 // post questios and answers
