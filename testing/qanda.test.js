@@ -19,14 +19,51 @@ describe("Sad path: End points", () => {
   describe("GET", () => {
     test('/qa/questions? should return 400 if product_id is not provided', async () => {
       const app = await request(server).get(`/qa/questions?`)
-      //console.log(app.res)
       expect(app.res.statusCode).toBe(400)
     });
-    // test('/questions/:question_id/answers should return 400 if product_id is not provided', async () => {
-    //   const app = await request(server).get('/questions/:question_id/answers')
-    //   //console.log(app.res)
-    //   expect(app.res.statusCode).toBe(400)
-    // });
+    test('/qa/questions/:question_id/answers should return 400 if product_id is not provided', async () => {
+      const app = await request(server).get('/qa/questions/:question_id/answers')
+      expect(app.res.statusCode).toBe(400)
+    });
+  })
+
+  describe("POST", () => {
+    test('/qa/questions should return 400 if req.body is not provided', async () => {
+      const app = await request(server).post(`/qa/questions`)
+      console.log(app.res)
+      expect(app.res.statusCode).toBe(400)
+    });
+
+    test('/questions/:question_id/answers should return 400 if req.body is not provided', async () => {
+      const app = await request(server).post(`/qa/questions/:question_id/answers`)
+      // console.log(app.res)
+      expect(app.res.statusCode).toBe(400)
+    });
+  })
+
+  describe("PUT", () => {
+    test('/qa/questions/:question_id/report should return 400 if req.body is not provided', async () => {
+      const app = await request(server).put(`/qa/questions/:question_id/report`)
+      expect(app.res.statusCode).toBe(400)
+    });
+
+    test('/questions/:question_id/helpful should return 400 if req.body is not provided', async () => {
+      const app = await request(server).put(`/qa/questions/:question_id/helpful`)
+      // console.log(app.res)
+      expect(app.res.statusCode).toBe(400)
+    });
+
+    test('/qa/answers/:answer_id/report should return 400 if req.body is not provided', async () => {
+      const app = await request(server).put(`/qa/answers/:answer_id/report`)
+      // console.log(app.res)
+      expect(app.res.statusCode).toBe(400)
+    });
+
+    test('/aq/answers/:answer_id/helpful should return 400 if req.body is not provided', async () => {
+      const app = await request(server).put(`/qa/answers/:answer_id/helpful`)
+      // console.log(app.res)
+      expect(app.res.statusCode).toBe(400)
+    });
   })
 })
 

@@ -6,10 +6,10 @@ const putQueries = require('../db/putQueries.js')
 module.exports = {
 
   getAnswers: (req, res) => {
-    //console.log('getAnswers for question_id: ', req.params.question_id)
+    console.log('getAnswers for question_id: ', req.params.question_id)
     let question_id = req.params.question_id;
-    if (!product_id) {
-      res.status(400)
+    if (!question_id || typeof question_id !== 'number') {
+      res.status(400).send('question_id is undefined')
       return
     }
     let count = req.query.count || 5;
@@ -28,11 +28,12 @@ module.exports = {
   },
   postAnswer: (req, res) => {
     //console.log('postAnswer: ', req.params.question_id, req.body)
-    let queryString = postQueries.postAnswer(req.params.question_id, req.body)
-    if (queryString === null) {
-      res.status(400)
+    if (Object.keys(req.body).length === 0) {
+      res.status(400).send('missing req.body')
       return
     }
+    let queryString = postQueries.postAnswer(req.params.question_id, req.body)
+
     pool.query(queryString)
       .then((result) => {
         //console.log('returned answer_id is: ', result.rows[0].answer_id)
@@ -67,12 +68,13 @@ module.exports = {
   },
   updateAnswerReport: (req, res) => {
     //console.log('updateAnswerReport: ', req.params.answer_id)
-    let queryString = putQueries.updateReported(req.params.answer_id, 'answer_id', 'ANSWERS')
-    //console.log(queryString)
-    if (queryString === null) {
-      res.status(400)
+    if (!req.params.answer_id || typeof req.params.answer_id !== 'number') {
+      res.status(400).send()
       return
     }
+    let queryString = putQueries.updateReported(req.params.answer_id, 'answer_id', 'ANSWERS')
+    //console.log(queryString)
+
     pool.query(queryString)
       .then((result) => {
         console.log(result)
@@ -88,12 +90,12 @@ module.exports = {
   },
   updateAnswerHelpfulness: (req, res) => {
     //console.log('updateAnswerHelpfulness: ', req.params.answer_id)
-    let queryString = putQueries.updateHelpfulness(req.params.answer_id, 'answer_id', 'answer_helpfulness', 'ANSWERS')
-    // console.log(queryString)
-    if (queryString === null) {
-      res.status(400)
+    if (!req.params.answer_id || typeof req.params.answer_id !== 'number') {
+      res.status(400).send()
       return
     }
+    let queryString = putQueries.updateHelpfulness(req.params.answer_id, 'answer_id', 'answer_helpfulness', 'ANSWERS')
+    // console.log(queryString)
     pool.query(queryString)
       .then((result) => {
         console.log(result)
