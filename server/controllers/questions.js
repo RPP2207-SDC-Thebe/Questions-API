@@ -10,14 +10,14 @@ module.exports = {
     //console.log('getQuestions for product_id: ', req.query.product_id)
 
     let product_id = req.query.product_id;
-    if (!product_id || typeof product_id !== 'number') {
+    if (!product_id) {
       res.status(400).send('product_id is undefined')
       return
     }
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getQuestion(product_id, count, page)
-    // console.log(queryString)
+    console.log(queryString)
     pool.query(queryString)
       .then((data) => {
         //console.log(data.rows)
@@ -51,8 +51,8 @@ module.exports = {
       })
   },
   updateQuestionReport: (req, res) => {
-    //console.log('updateQuestionReport: ', req.params.question_id)
-    if (!req.params.question_id || typeof req.params.question_id !== 'number') {
+    console.log('updateQuestionReport: ', req.params.question_id)
+    if (!req.params.question_id || req.params.question_id === ':question_id') {
       res.status(400).send()
       return
     }
@@ -74,7 +74,7 @@ module.exports = {
   updateQuestionHelpfulness: (req, res) => {
 
     //console.log('updateQuestionHelpfulness: ', req.params.question_id)
-    if (!req.params.question_id || typeof req.params.question_id !== 'number') {
+    if (!req.params.question_id || req.params.question_id === ':question_id') {
       res.status(400).send()
       return
     }

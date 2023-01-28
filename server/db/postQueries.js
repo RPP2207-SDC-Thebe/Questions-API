@@ -6,7 +6,7 @@ const postQueries = {
     let username = reqData.name
     let email = reqData.email
 
-    if (!product_id || !body || !usename || !email) {
+    if (!product_id || !body || !username || !email) {
       return null
     }
     var queryString =
@@ -30,7 +30,7 @@ const postQueries = {
     let username = reqData.name
     let email = reqData.email
 
-    if (!question_id || !body || !usename || !email) {
+    if (!question_id || !body || !username || !email) {
       return null
     }
     var queryString =

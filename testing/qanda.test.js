@@ -47,7 +47,7 @@ describe("Sad path: End points", () => {
       expect(app.res.statusCode).toBe(400)
     });
 
-    test('/questions/:question_id/helpful should return 400 if req.body is not provided', async () => {
+    test('/qa/questions/:question_id/helpful should return 400 if req.body is not provided', async () => {
       const app = await request(server).put(`/qa/questions/:question_id/helpful`)
       // console.log(app.res)
       expect(app.res.statusCode).toBe(400)
@@ -67,5 +67,13 @@ describe("Sad path: End points", () => {
   })
 })
 
-
+describe("Happy path: End points", () => {
+  describe("GET", () => {
+    test('/qa/questions? should return 200 and result from DB if operation is succeeded.', async () => {
+      const app = await request(server).get(`/qa/questions?`).query({ product_id: 77177 })
+      //console.log(app.res)
+      // expect(app.res.statusCode).toBe(400)
+    });
+  })
+})
 

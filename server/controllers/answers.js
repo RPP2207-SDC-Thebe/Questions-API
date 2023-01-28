@@ -8,14 +8,14 @@ module.exports = {
   getAnswers: (req, res) => {
     console.log('getAnswers for question_id: ', req.params.question_id)
     let question_id = req.params.question_id;
-    if (!question_id || typeof question_id !== 'number') {
+
+    if (!question_id || question_id === ':question_id') {
       res.status(400).send('question_id is undefined')
       return
     }
     let count = req.query.count || 5;
     let page = req.query.page || 1;
     let queryString = getQueries.getAnswer(question_id, count, page)
-
     pool.query(queryString)
       .then((data) => {
         //console.log(data.rows)
@@ -68,7 +68,7 @@ module.exports = {
   },
   updateAnswerReport: (req, res) => {
     //console.log('updateAnswerReport: ', req.params.answer_id)
-    if (!req.params.answer_id || typeof req.params.answer_id !== 'number') {
+    if (!req.params.answer_id || req.params.answer_id === ':answer_id') {
       res.status(400).send()
       return
     }
@@ -90,7 +90,7 @@ module.exports = {
   },
   updateAnswerHelpfulness: (req, res) => {
     //console.log('updateAnswerHelpfulness: ', req.params.answer_id)
-    if (!req.params.answer_id || typeof req.params.answer_id !== 'number') {
+    if (!req.params.answer_id || req.params.answer_id === ':answer_id') {
       res.status(400).send()
       return
     }

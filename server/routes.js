@@ -19,5 +19,3 @@ router.put('/answers/:answer_id/helpful', controllers.answers.updateAnswerHelpfu
 
 
 module.exports = router;
-
-

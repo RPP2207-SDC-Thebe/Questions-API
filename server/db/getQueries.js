@@ -54,7 +54,7 @@ const getQueries = {
                 ) photos
               )
             )
-          ) FROM ANSWERS WHERE answers.question_id = ${question_id} AND reported = false limit ${count}
+          ) FROM ANSWERS WHERE answers.question_id = ${question_id} limit ${count}
         )
       ) as answers;`
 
