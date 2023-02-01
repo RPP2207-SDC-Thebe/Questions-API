@@ -18,8 +18,8 @@ module.exports = {
     let queryString = getQueries.getAnswer(question_id, count, page)
     pool.query(queryString)
       .then((data) => {
-        //console.log(data.rows)
-        res.status(200).send(data.rows);
+        //console.log(data.rows[0].answers)
+        res.status(200).send(data.rows[0].answers);
       })
       .catch((err) => {
         console.log('getAnswers: ', err)
