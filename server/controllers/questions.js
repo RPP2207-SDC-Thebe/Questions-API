@@ -7,7 +7,7 @@ module.exports = {
   getQuestions: (req, res) => {
     // if use the path format on Learn -> req.params.product_id;
     // if use THE path format in FEC -> req.query.product_id;
-    console.log('getQuestions for product_id: ', req.query.product_id)
+    //console.log('getQuestions for product_id: ', req.query.product_id)
 
     let product_id = req.query.product_id;
     if (!product_id) {
@@ -20,7 +20,7 @@ module.exports = {
     //console.log(queryString)
     pool.query(queryString)
       .then((data) => {
-        // console.log(data.rows[0].questions)
+        // console.log(data.rows[0].questions.product_id)
         res.status(200).send(data.rows[0].questions);
       })
       .catch((err) => {
@@ -31,7 +31,7 @@ module.exports = {
 
   },
   postQuestion: async (req, res) => {
-    console.log('postQuestion: ', req.body)
+    //console.log('postQuestion: ', req.body)
     if (Object.keys(req.body).length === 0) {
       res.status(400).send('missing req.body')
       return
@@ -85,6 +85,7 @@ module.exports = {
       .then((result) => {
         //console.log(result)
         if (result.command === 'UPDATE' && result.rowCount === 1) {
+          //console.log('updated')
           res.status(200).send(`${req.params.question_id} updated`)
         }
       })

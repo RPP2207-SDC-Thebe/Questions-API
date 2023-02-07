@@ -6,7 +6,7 @@ const putQueries = require('../db/putQueries.js')
 module.exports = {
 
   getAnswers: (req, res) => {
-    console.log('getAnswers for question_id: ', req.params.question_id)
+    //console.log('getAnswers for question_id: ', req.params.question_id)
     let question_id = req.params.question_id;
 
     if (!question_id || question_id === ':question_id') {
@@ -77,7 +77,7 @@ module.exports = {
 
     pool.query(queryString)
       .then((result) => {
-        console.log(result)
+        //console.log(result)
         if (result.command === 'UPDATE' && result.rowCount === 1) {
           res.status(200).send(`${req.params.answer_id} updated`)
         }
@@ -98,7 +98,7 @@ module.exports = {
     // console.log(queryString)
     pool.query(queryString)
       .then((result) => {
-        console.log(result)
+        //console.log(result)
         if (result.command === 'UPDATE' && result.rowCount === 1) {
           res.status(200).send(`${req.params.answer_id} updated`)
         }
