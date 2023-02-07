@@ -8,7 +8,7 @@ const getQueries = {
           json_build_object(
             'question_id', question_id,
             'question_body',question_body,
-            'question_date', submitted_date,
+            'question_date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
             'asker_name', username,
             'question_helpfulness',question_helpfulness,
             'reported', reported,
@@ -18,7 +18,7 @@ const getQueries = {
                     SELECT json_build_object(
                       'id', answer_id,
                       'body', answer_body,
-                      'date', submitted_date,
+                      'date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
                       'answerer_name', username,
                       'reported', reported,
                       'helpfulness', answer_helpfulness,
@@ -44,7 +44,7 @@ const getQueries = {
             json_build_object(
               'answer_id', answer_id,
               'body', answer_body,
-              'date', submitted_date,
+              'date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
               'answerer_name', username,
               'reported', reported,
               'helpfulness', answer_helpfulness,
@@ -74,7 +74,7 @@ module.exports = getQueries;
 //       json_build_object(
 //         'question_id', question_id,
 //         'question_body',question_body,
-//         'question_date', submitted_date,
+//         'question_date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 //         'asker_name', username,
 //         'question_helpfulness',question_helpfulness,
 //         'reported', reported,
@@ -84,7 +84,7 @@ module.exports = getQueries;
 //                 SELECT json_build_object(
 //                   'id', answer_id,
 //                   'body', answer_body,
-//                   'date', submitted_date,
+//                   'date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 //                   'answerer_name', username,
 //                   'reported', reported,
 //                   'helpful', answer_helpfulness,
@@ -118,7 +118,7 @@ module.exports = getQueries;
 //           json_build_object(
 //             'answer_id', answer_id,
 //             'body', answer_body,
-//             'date', submitted_date,
+//             'date', TO_CHAR(TO_TIMESTAMP(submitted_date/1000), 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 //             'answerer_name', username,
 //             'reported', reported,
 //             'helpfulness', answer_helpfulness,
