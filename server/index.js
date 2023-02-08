@@ -1,4 +1,3 @@
-
 const cluster = require('cluster')
 const os = require('os')
 const numCpu = os.cpus().length
@@ -25,5 +24,3 @@ if (cluster.isMaster) {
     });
   }
 }
-
-

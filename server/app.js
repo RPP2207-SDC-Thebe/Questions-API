@@ -1,5 +1,3 @@
-
-
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -14,7 +12,7 @@ app.use('/qa', routes);
 
 app.get('/test', (req, res) => {
   res.send(`OK...${process.pid} responded`)
-  cluster.worker.kill()
+
 })
 
 module.exports = app
