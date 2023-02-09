@@ -1,21 +1,26 @@
-require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const app = express();
-const port = process.env.PORT || 8080
-const routes = require('./routes');
+const cluster = require('cluster')
+const os = require('os')
+const numCpu = os.cpus().length
 
+if (cluster.isMaster) {
+  for (let i = 0; i < numCpu; i++) {
+    // create new worker process
+    cluster.fork()
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} dismissed`)
+    // after a worker process is gone, create another one, provide always up instances
+    cluster.fork()
+  })
+} else {
+  require('dotenv').config();
+  const port = process.env.PORT || 8080
+  const app = require('./app.js')
 
-app.use(express.json());
-// routes
-app.use('/qa', routes);
-
-app.listen(port, () => {
-  console.log(`app listening on http://localhost:${port}`)
-});
-
-app.get('/test', (req, res) => {
-  res.send('GT4')
-})
-
-module.exports = app
+  //avoid port collision
+  if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+      console.log(`Server $${process.pid} listening on http://localhost:${port}`)
+    });
+  }
+}

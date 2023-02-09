@@ -5,6 +5,10 @@ const postQueries = {
     let submitted_date = new Date().getTime()
     let username = reqData.name
     let email = reqData.email
+
+    if (!product_id || !body || !username || !email) {
+      return null
+    }
     var queryString =
       `INSERT INTO questions (
         product_id,
@@ -25,6 +29,10 @@ const postQueries = {
     let submitted_date = new Date().getTime()
     let username = reqData.name
     let email = reqData.email
+
+    if (!question_id || !body || !username || !email) {
+      return null
+    }
     var queryString =
       `INSERT INTO answers (question_id,
         answer_body,

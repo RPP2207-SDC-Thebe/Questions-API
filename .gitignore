@@ -108,3 +108,5 @@ dist
 .env
 
 *.csv
+
+rest.http
