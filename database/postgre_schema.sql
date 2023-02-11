@@ -1,13 +1,12 @@
 -- read this sql file
 -- \i ./database/postgre_schema.sql;
 
-DROP DATABASE IF EXISTS qanda;
-CREATE DATABASE qanda;
+--CREATE DATABASE IF NOT EXISTS qanda;
 -- connect DB
 \c qanda;
 -- create tables
 
-CREATE TABLE questions(
+CREATE TABLE IF NOT EXISTS questions(
   QUESTION_ID SERIAL PRIMARY KEY NOT NULL,
   PRODUCT_ID INT NOT NULL,
   QUESTION_BODY TEXT NOT NULL,
@@ -21,10 +20,11 @@ CREATE TABLE questions(
 --Insert data
 --https://www.postgresql.org/docs/current/sql-copy.html
 COPY questions (QUESTION_ID, PRODUCT_ID, QUESTION_BODY,SUBMITTED_DATE,USERNAME,EMAIL,REPORTED,QUESTION_HELPFULNESS)
-FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/questions.csv' DELIMITER ',' CSV HEADER;
+FROM '/docker-entrypoint-initdb.d/questions.csv' DELIMITER ',' CSV HEADER;
+--FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/questions.csv' DELIMITER ',' CSV HEADER;
 
 
-CREATE TABLE answers(
+CREATE TABLE IF NOT EXISTS answers(
   ANSWER_ID SERIAL PRIMARY KEY NOT NULL,
   QUESTION_ID INTEGER REFERENCES QUESTIONS(QUESTION_ID),
   ANSWER_BODY TEXT NOT NULL,
@@ -36,16 +36,18 @@ CREATE TABLE answers(
 );
 --Insert data
 COPY answers (ANSWER_ID, QUESTION_ID, ANSWER_BODY, SUBMITTED_DATE, USERNAME, EMAIL,REPORTED, ANSWER_HELPFULNESS)
-FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers.csv' DELIMITER ',' CSV HEADER;
+FROM '/docker-entrypoint-initdb.d/answers.csv' DELIMITER ',' CSV HEADER;
+--FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers.csv' DELIMITER ',' CSV HEADER;
 
-CREATE TABLE photos(
+CREATE TABLE IF NOT EXISTS photos(
   PHOTO_ID SERIAL PRIMARY KEY NOT NULL,
   ANSWER_ID INTEGER REFERENCES ANSWERS(ANSWER_ID),
   PIC_URL TEXT NOT NULL
 );
 --Insert data
 COPY photos (PHOTO_ID, ANSWER_ID, PIC_URL)
-FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers_photos.csv' DELIMITER ',' CSV HEADER;
+FROM '/docker-entrypoint-initdb.d/answers_photos.csv' DELIMITER ',' CSV HEADER;
+--FROM '/Users/saikitJK/HackReactor/SDC/Questions-API/database/answers_photos.csv' DELIMITER ',' CSV HEADER;
 
 -- set sequence
 SELECT setval('questions_question_id_seq', COALESCE((SELECT MAX(question_id)+1 FROM questions), 1), false);
@@ -59,6 +61,7 @@ CREATE INDEX idx_question_id ON questions(question_id);
 CREATE INDEX idx_question_submitted_date  ON questions(submitted_date);
 CREATE INDEX idx_question_helpfulness ON questions (question_helpfulness);
 
+
 -- Answers table
 CREATE INDEX idx_answer_id ON answers(answer_id);
 CREATE INDEX idx_question_fk ON answers (question_id);
@@ -68,3 +71,10 @@ CREATE INDEX idx_answers_helpfulness ON answers (answer_helpfulness);
 --Photos table
 CREATE INDEX idx_photo_id ON photos(photo_id);
 CREATE INDEX idx_answers_fk ON photos (answer_id);
+
+--Permissions
+GRANT ALL PRIVILEGES ON ALL TABLES in schema public to sdcuser;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO sdcuser;
+
+--enable timeing
+\timing

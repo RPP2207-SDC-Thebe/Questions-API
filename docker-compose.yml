@@ -1,0 +1,29 @@
+version: "4.16.2"
+services:
+  postgres:
+    container_name: sdc-db-container
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+    ## API
+  sdc-qanda:
+    build: .
+    container_name: sdc-qanda-container
+    image: sdc-qanda-image
+    ports:
+      - '${DOCKER_PORT}:${PORT}'
+    environment:
+      host: postgres
+      port: ${DOCKER_DB_PORT}
+      database: ${DB_NAME}
+      user: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+    depends_on:
+      - postgres

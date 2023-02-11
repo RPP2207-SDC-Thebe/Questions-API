@@ -1,0 +1,11 @@
+# files here would not be copied over by the COPY commend
+
+node_modules
+
+npm-debug.log
+
+Dockerfile
+
+.dockerignore
+
+docker-compose.yml
