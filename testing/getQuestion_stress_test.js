@@ -6,7 +6,7 @@ export const options = {
 
   insecureSkipTLSVerify: true,
   noConnectionReuse: false,
-  vus: 100,
+  vus: 1000,
   duration: '30s'
 }
 
