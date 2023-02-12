@@ -8,8 +8,10 @@ const Pool = require('pg').Pool;
 require('dotenv').config()
 
 const pool = new Pool({
-  host: process.env.DB_HOST, // local
-  // host: "host.docker.internal", // Docker
+  //host: process.env.DB_HOST, // local
+  //host: process.env.DOCKER_DB_HOST, // Docker
+  host: process.env.EC2_DB_HOST,
+  //port: process.env.LOCAL_PG_PORT, // local
   port: process.env.PG_PORT,
   //database: process.env.INITIAL_DB_NAME,
   database: process.env.DB_NAME,
