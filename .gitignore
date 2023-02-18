@@ -115,3 +115,5 @@ rest.http
 coverage/
 
 *.pem
+
+deployEC2.txt
