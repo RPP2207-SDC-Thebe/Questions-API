@@ -7,7 +7,7 @@ export const options = {
   insecureSkipTLSVerify: true,
   noConnectionReuse: false,
   vus: 1000,
-  duration: '30s'
+  duration: '60s'
 }
 
 export default function getQuestion() {
