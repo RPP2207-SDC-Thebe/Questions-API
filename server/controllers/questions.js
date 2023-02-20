@@ -3,55 +3,38 @@ const pool = require('../db/index.js')
 const getQueries = require('../db/getQueries.js')
 const postQueries = require('../db/postQueries.js')
 const putQueries = require('../db/putQueries.js')
-
-
-const REDIS_PORT = process.env.REDIS_PORT || 6379
-
-// Redis
-const redisClient = require('../db/redis.js')
-//const redis = require('redis');
-//const redisClient = redis.createClient(REDIS_PORT);
-const DEFAULT_EXPIRATION = 3600
+const getOrSetCache = require('./getSetRedis.js').getOrSetCache
 
 
 module.exports = {
-  getQuestions: (req, res) => {
+  getQuestions: async (req, res) => {
     // if use the path format on Learn -> req.params.product_id;
     // if use THE path format in FEC -> req.query.product_id;
-    console.log('getQuestions for product_id: ', req.query.product_id)
+    //console.log('getQuestions for product_id: ', req.query.product_id)
     let product_id = req.query.product_id;
     if (!product_id) {
       res.status(400).send('product_id is undefined')
       return
     }
-    //check if redis has the data, if not query postgres
-    redisClient.get(product_id)
-      .then((data) => {
-        if (data !== null) {
-          //console.log('fetching Redis')
-          res.status(200).send(JSON.parse(data))
-        } else {
-          //console.log('fetching Postgres')
-          let count = req.query.count || 5;
-          let page = req.query.page || 1;
-          let queryString = getQueries.getQuestion(product_id, count, page)
-          //console.log(queryString)
-          pool.query(queryString)
-            .then((data) => {
-              // save to redis
-              redisClient.set(product_id, JSON.stringify(data.rows[0].questions))
-              redisClient.expire(product_id, DEFAULT_EXPIRATION)
-              res.status(200).send(data.rows[0].questions);
-            })
-            .catch((err) => {
-              console.log('getQuestions: ', err)
-              res.status(500).send(err)
-            })
-        }
-      })
-      .catch((err) => {
-        console.log('redis error: ', err)
-      })
+
+    const questions = await getOrSetCache(product_id, () => {
+      let count = req.query.count || 5;
+      let page = req.query.page || 1;
+      let queryString = getQueries.getQuestion(product_id, count, page)
+
+      return pool.query(queryString)
+        .then((data) => {
+          return data.rows[0].questions;
+        })
+        .catch((err) => {
+          console.log('getQuestions: ', err)
+          return err
+        })
+    })
+
+    // console.log(typeof questions)
+    res.status(200).send(questions)
+
   },
   postQuestion: async (req, res) => {
     //console.log('postQuestion: ', req.body)
@@ -119,3 +102,33 @@ module.exports = {
   }
 }
 
+
+// A direct impletmentation before making the get and set cache into a resuable fuction
+// //check if redis has the data, if not query postgres
+    // redisClient.get(product_id)
+    //   .then((data) => {
+    //     if (data !== null) {
+    //       //console.log('fetching Redis')
+    //       res.status(200).send(JSON.parse(data))
+    //     } else {
+    //       //console.log('fetching Postgres')
+    //       let count = req.query.count || 5;
+    //       let page = req.query.page || 1;
+    //       let queryString = getQueries.getQuestion(product_id, count, page)
+    //       //console.log(queryString)
+    //       pool.query(queryString)
+    //         .then((data) => {
+    //           // save to redis
+    //           redisClient.set(product_id, JSON.stringify(data.rows[0].questions))
+    //           redisClient.expire(product_id, DEFAULT_EXPIRATION)
+    //           res.status(200).send(data.rows[0].questions);
+    //         })
+    //         .catch((err) => {
+    //           console.log('getQuestions: ', err)
+    //           res.status(500).send(err)
+    //         })
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log('redis error: ', err)
+    //   })
