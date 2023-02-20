@@ -34,6 +34,6 @@ const app = require('./app.js')
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
 
-    console.log(`Server ${process.pid} listening on http://localhost:${port}`)
+    console.log(`Server ${process.pid} listening on ${port}`)
   });
 }
