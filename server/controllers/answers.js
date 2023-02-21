@@ -2,10 +2,10 @@ var pool = require('../db')
 const getQueries = require('../db/getQueries.js')
 const postQueries = require('../db/postQueries.js')
 const putQueries = require('../db/putQueries.js')
+const getOrSetCache = require('./getSetRedis.js').getOrSetCache
 
 module.exports = {
-
-  getAnswers: (req, res) => {
+  getAnswers: async (req, res) => {
     //console.log('getAnswers for question_id: ', req.params.question_id)
     let question_id = req.params.question_id;
 
@@ -13,18 +13,23 @@ module.exports = {
       res.status(400).send('question_id is undefined')
       return
     }
-    let count = req.query.count || 5;
-    let page = req.query.page || 1;
-    let queryString = getQueries.getAnswer(question_id, count, page)
-    pool.query(queryString)
-      .then((data) => {
-        //console.log(data.rows[0].answers)
-        res.status(200).send(data.rows[0].answers);
-      })
-      .catch((err) => {
-        console.log('getAnswers: ', err)
-        res.status(500).send(err)
-      })
+    const answers = await getOrSetCache(question_id, () => {
+      //console.log('cache miss')
+      let count = req.query.count || 5;
+      let page = req.query.page || 1;
+      let queryString = getQueries.getAnswer(question_id, count, page)
+
+      return pool.query(queryString)
+        .then((data) => {
+          //console.log(data.rows[0].answers)
+          return [200, data.rows[0].answers];
+        })
+        .catch((err) => {
+          console.log('getAnswers: ', err)
+          return [500, err]
+        })
+    })
+    res.status(answers[0]).send(answers[1])
   },
   postAnswer: (req, res) => {
     //console.log('postAnswer: ', req.params.question_id, req.body)

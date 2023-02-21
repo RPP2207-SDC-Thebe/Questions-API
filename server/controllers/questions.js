@@ -24,16 +24,16 @@ module.exports = {
 
       return pool.query(queryString)
         .then((data) => {
-          return data.rows[0].questions;
+          return [200, data.rows[0].questions];
         })
         .catch((err) => {
           console.log('getQuestions: ', err)
-          return err
+          return [500, err]
         })
     })
 
     // console.log(typeof questions)
-    res.status(200).send(questions)
+    res.status(questions[0]).send(questions[1])
 
   },
   postQuestion: async (req, res) => {
