@@ -10,7 +10,7 @@ module.exports = {
           // if cache data exists
           if (data !== null) {
             //console.log('cache hit')
-            return resolve([200, JSON.parse(data)])
+            return resolve(JSON.parse(data))
             //*add retrun here to stop the execution earlier */
           }
           // no cache, need fresh data
@@ -18,11 +18,18 @@ module.exports = {
           const freshData = await cb()
           redisClient.set(key, JSON.stringify(freshData))
           //redisClient.expire(key, DEFAULT_EXPIRATION)
-          resolve([200, freshData])
+          resolve(freshData)
         })
         .catch((err) => {
-          return reject([500, err])
+          return reject(err)
         })
     })
+  },
+  removeCache: (keyArr) => {
+    console.log(keyArr)
+    keyArr.forEach(key => {
+      redisClient.del(key)
+    })
+
   }
 }

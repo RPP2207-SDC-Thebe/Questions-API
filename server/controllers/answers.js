@@ -2,7 +2,8 @@ var pool = require('../db')
 const getQueries = require('../db/getQueries.js')
 const postQueries = require('../db/postQueries.js')
 const putQueries = require('../db/putQueries.js')
-const getOrSetCache = require('./getSetRedis.js').getOrSetCache
+const getOrSetCache = require('./caching.js').getOrSetCache
+const removeCache = require('./caching.js').removeCache
 
 module.exports = {
   getAnswers: async (req, res) => {
@@ -21,15 +22,14 @@ module.exports = {
 
       return pool.query(queryString)
         .then((data) => {
-          //console.log(data.rows[0].answers)
-          return [200, data.rows[0].answers];
+          return data.rows[0].answers;
         })
         .catch((err) => {
           console.log('getAnswers: ', err)
-          return [500, err]
+          return err
         })
     })
-    res.status(answers[0]).send(answers[1])
+    res.send(answers)
   },
   postAnswer: (req, res) => {
     //console.log('postAnswer: ', req.params.question_id, req.body)
@@ -40,9 +40,14 @@ module.exports = {
     let queryString = postQueries.postAnswer(req.params.question_id, req.body)
 
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
         //console.log('returned answer_id is: ', result.rows[0].answer_id)
+        let idQueryString = getQueries.getIds(result.rows[0].answer_id, 'a.answer_id')
+        let product = await pool.query(idQueryString)
+        let product_id = JSON.stringify(product.rows[0].product_id)
+
         if (req.body.photos.length === 0 && result.command === 'INSERT' && result.rowCount === 1) {
+          removeCache([product_id, req.params.question_id])
           res.status(201).send('Answer posted.')
         } else {
           // inser photos in photo array
@@ -57,6 +62,7 @@ module.exports = {
             .then((result) => {
               //console.log(result, insertArray.length)
               if (result.length === insertArray.length) {
+                removeCache([product.rows[0].product_id, req.params.question_id])
                 res.status(201).send('Answer and photos posted.')
               }
             })
@@ -81,9 +87,15 @@ module.exports = {
     //console.log(queryString)
 
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
         //console.log(result)
+        let idQueryString = getQueries.getIds(req.params.answer_id, 'a.answer_id')
+        let product = await pool.query(idQueryString)
+        let product_id = JSON.stringify(product.rows[0].product_id)
+        let question_id = JSON.stringify(product.rows[0].question_id)
+
         if (result.command === 'UPDATE' && result.rowCount === 1) {
+          removeCache([product_id, question_id])
           res.status(200).send(`${req.params.answer_id} updated`)
         }
       })
@@ -102,9 +114,15 @@ module.exports = {
     let queryString = putQueries.updateHelpfulness(req.params.answer_id, 'answer_id', 'answer_helpfulness', 'ANSWERS')
     // console.log(queryString)
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
         //console.log(result)
+        let idQueryString = getQueries.getIds(req.params.answer_id, 'a.answer_id')
+        let product = await pool.query(idQueryString)
+        let product_id = JSON.stringify(product.rows[0].product_id)
+        let question_id = JSON.stringify(product.rows[0].question_id)
+
         if (result.command === 'UPDATE' && result.rowCount === 1) {
+          removeCache([product_id, question_id])
           res.status(200).send(`${req.params.answer_id} updated`)
         }
       })

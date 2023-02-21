@@ -3,8 +3,8 @@ const pool = require('../db/index.js')
 const getQueries = require('../db/getQueries.js')
 const postQueries = require('../db/postQueries.js')
 const putQueries = require('../db/putQueries.js')
-const getOrSetCache = require('./getSetRedis.js').getOrSetCache
-
+const getOrSetCache = require('./caching.js').getOrSetCache
+const removeCache = require('./caching.js').removeCache
 
 module.exports = {
   getQuestions: async (req, res) => {
@@ -24,16 +24,16 @@ module.exports = {
 
       return pool.query(queryString)
         .then((data) => {
-          return [200, data.rows[0].questions];
+          return data.rows[0].questions;
         })
         .catch((err) => {
           console.log('getQuestions: ', err)
-          return [500, err]
+          return err
         })
     })
 
-    // console.log(typeof questions)
-    res.status(questions[0]).send(questions[1])
+    //console.log(questions)
+    res.send(questions)
 
   },
   postQuestion: async (req, res) => {
@@ -43,11 +43,17 @@ module.exports = {
       return
     }
     let queryString = await postQueries.postQuestion(req.body)
+    //req.body.product_id
     //console.log(queryString)
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
         //console.log(result)
+        let idQueryString = getQueries.getIds(req.body.product_id, 'q.product_id')
+        let product = await pool.query(idQueryString)
+        let question_id = JSON.stringify(product.rows[0].question_id)
+        let product_id = JSON.stringify(req.body.product_id)
         if (result.command === 'INSERT' && result.rowCount === 1) {
+          removeCache([product_id, question_id])
           res.status(201).send('Question posted.')
         }
       })
@@ -66,9 +72,14 @@ module.exports = {
     //console.log(queryString)
 
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
+        let idQueryString = getQueries.getIds(req.params.question_id, 'q.question_id')
+        let product = await pool.query(idQueryString)
+        let product_id = JSON.stringify(product.rows[0].product_id)
+
         //console.log(result)
         if (result.command === 'UPDATE' && result.rowCount === 1) {
+          removeCache([product_id, req.params.question_id])
           res.status(200).send(`${req.params.question_id} updated`)
         }
       })
@@ -88,10 +99,16 @@ module.exports = {
     //console.log(queryString)
 
     pool.query(queryString)
-      .then((result) => {
+      .then(async (result) => {
         //console.log(result)
+        let idQueryString = getQueries.getIds(req.params.question_id, 'q.question_id')
+        let product = await pool.query(idQueryString)
+        let product_id = JSON.stringify(product.rows[0].product_id)
+
+
         if (result.command === 'UPDATE' && result.rowCount === 1) {
           //console.log('updated')
+          removeCache([product_id, req.params.question_id])
           res.status(200).send(`${req.params.question_id} updated`)
         }
       })
