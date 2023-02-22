@@ -8,19 +8,18 @@ const Pool = require('pg').Pool;
 require('dotenv').config()
 
 const pool = new Pool({
-  //host: process.env.DB_HOST, // local
+  host: process.env.DB_HOST, // local
   //host: process.env.DOCKER_DB_HOST, // Docker
-  host: process.env.EC2_DB_HOST,
-  //port: process.env.LOCAL_PG_PORT, // local
-  port: process.env.PG_PORT,
+  //host: process.env.EC2_DB_HOST,
+  port: process.env.LOCAL_PG_PORT, // local
+  //port: process.env.PG_PORT,
   //database: process.env.INITIAL_DB_NAME,
   database: process.env.DB_NAME,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  // max: 150,
-  // default is 100
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
+  max: 100,
+  idleTimeoutMillis: 0,
+  connectionTimeoutMillis: 0
 })
 
 

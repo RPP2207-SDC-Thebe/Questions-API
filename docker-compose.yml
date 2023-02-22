@@ -12,19 +12,17 @@ services:
       - ./database:/docker-entrypoint-initdb.d
     ports:
       - '2345:5432'
-    ## API
-    # sdc-qanda:
-    #   build: .
-    #   container_name: sdc-qanda-container
-    #   image: sdc-qanda-image
-    #   ports:
-    #     - '${DOCKER_PORT}:${PORT}'
-    #   environment:
-    #     host: postgres
-    #     port: ${DOCKER_DB_PORT}
-    #     database: ${DB_NAME}
-    #     user: ${DB_USERNAME}
-    #     password: ${DB_PASSWORD}
-    #   depends_on:
-    #     - postgres
-
+  ## API
+  services:
+    sdc-qanda:
+      build: .
+      container_name: sdc-qanda-container
+      image: sdc-qanda-image
+      ports:
+        - '${DOCKER_PORT}:${PORT}'
+      environment:
+        host: ${EC2_DB_HOST}
+        port: ${PG_PORT}
+        database: ${DB_NAME}
+        user: ${DB_USERNAME}
+        password: ${DB_PASSWORD}

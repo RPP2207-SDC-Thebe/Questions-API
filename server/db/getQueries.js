@@ -28,7 +28,7 @@ const getQueries = {
                   )
               ) FROM ANSWERS where answers.question_id = questions.question_id)
             )
-          ) FROM QUESTIONS where product_id = ${product_id} AND reported != true limit ${count}
+          ) FROM QUESTIONS where product_id = ${product_id} AND reported = false limit ${count}
         )
       ) as questions;`
     return queryString
@@ -60,6 +60,16 @@ const getQueries = {
 
     return queryString
 
+  },
+  getIds: (id, column) => {
+    var queryString =
+      `SELECT q.product_id, q.question_id
+     from ANSWERS AS a
+     INNER JOIN QUESTIONS AS q
+     ON a.question_id = q.question_id
+     WHERE ${column} =${id}`
+
+    return queryString
   }
 
 }
