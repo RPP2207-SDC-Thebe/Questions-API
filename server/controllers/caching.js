@@ -26,7 +26,7 @@ module.exports = {
     })
   },
   removeCache: (keyArr) => {
-    console.log(keyArr)
+    //console.log(keyArr)
     keyArr.forEach(key => {
       redisClient.del(key)
     })
