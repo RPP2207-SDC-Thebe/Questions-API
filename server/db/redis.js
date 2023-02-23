@@ -1,7 +1,13 @@
-const redis = require('redis');
 require('dotenv').config()
+const redis = require('redis');
+const REDIS_HOST = process.env.REDIS_HOST
 const REDIS_PORT = process.env.REDIS_PORT || 6379
-const redisClient = redis.createClient(REDIS_PORT);
+const redisClient = redis.createClient({
+  // socket: {
+  //   port: REDIS_PORT,
+  //   host: REDIS_HOST,
+  // }
+});
 
 redisClient.connect();
 

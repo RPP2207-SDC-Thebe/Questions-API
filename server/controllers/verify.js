@@ -1,8 +1,9 @@
+require("dotenv").config();
 const fs = require('fs');
 
 module.exports = {
   getToken: (req, res) => {
-    const token = __dirname + '/../../loaderio-3c4545d756d21c40da88525235dd81c5.txt'
+    const token = __dirname + `/../..${process.env.LOADER_IO_URL}`
     try {
       const data = fs.readFileSync(token, 'utf8')
       console.log(data)
