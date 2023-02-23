@@ -18,5 +18,5 @@ router.put('/answers/:answer_id/report', controllers.answers.updateAnswerReport)
 router.put('/answers/:answer_id/helpful', controllers.answers.updateAnswerHelpfulness)
 
 // loader.io verification
-router.get('/loaderio-3c4545d756d21c40da88525235dd81c5.txt', controllers.verify.getToken)
+router.get(`${process.env.LOADER_IO_URL}`, controllers.verify.getToken)
 module.exports = router;
