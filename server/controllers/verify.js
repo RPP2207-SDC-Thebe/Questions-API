@@ -6,7 +6,7 @@ module.exports = {
     const token = __dirname + `/../..${process.env.LOADER_IO_URL}`
     try {
       const data = fs.readFileSync(token, 'utf8')
-      console.log(data)
+      //console.log(data)
       res.send(data)
     } catch (err) {
       console.error(err)

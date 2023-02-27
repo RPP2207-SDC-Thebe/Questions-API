@@ -13,7 +13,7 @@ app.use('/qa', routes);
 
 // loader.io verification
 app.get(`${process.env.LOADER_IO_URL}`, routes)
-
+// console.log(process.env.LOADER_IO_URL)
 app.get('/test', (req, res) => {
   res.send(`OK...${process.pid} responded`)
 
@@ -23,6 +23,7 @@ app.get('/redis', async (req, res) => {
   const testdata = `gg ${new Date()}`
   await redisClient.set('testkey', JSON.stringify(testdata))
   let result = await redisClient.get('testkey')
+  redisClient.expire('testkey', 900)
   console.log(result)
   res.send(result)
 

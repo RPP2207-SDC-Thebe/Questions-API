@@ -1,6 +1,6 @@
 // Redis
 const redisClient = require('../db/redis.js')
-const DEFAULT_EXPIRATION = 3600
+const DEFAULT_EXPIRATION = 1800
 
 module.exports = {
   getOrSetCache: (key, cb) => {
@@ -9,7 +9,7 @@ module.exports = {
         .then(async (data) => {
           // if cache data exists
           if (data !== null) {
-            //console.log('cache hit')
+            console.log('cache hit')
             return resolve(JSON.parse(data))
             //*add retrun here to stop the execution earlier */
           }
@@ -17,10 +17,11 @@ module.exports = {
           // console.log('cache miss')
           const freshData = await cb()
           redisClient.set(key, JSON.stringify(freshData))
-          //redisClient.expire(key, DEFAULT_EXPIRATION)
+          redisClient.expire(key, DEFAULT_EXPIRATION)
           resolve(freshData)
         })
         .catch((err) => {
+          console.log('here ', err)
           return reject(err)
         })
     })

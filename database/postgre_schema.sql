@@ -1,3 +1,6 @@
+--connect to Postgres CLI
+-- psql postgres
+
 -- read this sql file
 -- \i ./database/postgre_schema.sql;
 

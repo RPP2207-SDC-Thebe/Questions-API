@@ -118,3 +118,5 @@ coverage/
 
 deployEC2.txt
 loaderio-3c4545d756d21c40da88525235dd81c5.txt
+
+*.conf
